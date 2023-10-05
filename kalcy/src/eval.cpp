@@ -46,7 +46,7 @@ struct Evaluator {
 		for (auto const& in : call.arguments) { args.push_back(Evaluator{env}.evaluate(*in)); }
 		try {
 			return env.invoke(call.callee, args);
-		} catch (Env::Mismatch const& mismatched_args) { throw ArgsMismatch{call.callee, mismatched_args.argument_count}; }
+		} catch (Env::Mismatch) { throw ArgsMismatch{call.callee, args.size()}; }
 	}
 
 	auto operator()(expr::Group const& group) const -> double { return Evaluator{env}.evaluate(*group.expr); }
