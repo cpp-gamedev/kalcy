@@ -19,9 +19,7 @@ class Env {
 	///
 	/// \brief Funcs can throw an instance of this.
 	///
-	struct Mismatch {
-		std::size_t argument_count{};
-	};
+	struct Mismatch {};
 
 	///
 	/// \brief Define a function.
