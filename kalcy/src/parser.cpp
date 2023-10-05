@@ -1,3 +1,4 @@
+#include <kalcy/error.hpp>
 #include <kalcy/parser.hpp>
 #include <kalcy/scanner.hpp>
 #include <cassert>
@@ -10,7 +11,7 @@ auto Parser::parse() noexcept(false) -> UExpr {
 	auto ret = expression();
 	if (m_current || m_next) {
 		auto const extranous = m_current ? m_current : m_next;
-		throw Error{.token = extranous, .expected = Token::Type::eNone};
+		throw ParseError{extranous, Token::Type::eNone};
 	}
 	return ret;
 }
@@ -64,17 +65,18 @@ auto Parser::unary() -> UExpr {
 }
 
 auto Parser::call() -> UExpr {
-	auto ret = primary();
-	if (match(Token::Type::eParenLeft)) {
-		auto fn = expr::Call{.callee = std::move(ret), .paren_l = m_previous};
+	if (m_next.type == Token::Type::eParenLeft && match(Token::Type::eIdentifier)) {
+		auto const callee = m_previous;
+		consume(Token::Type::eParenLeft);
+		auto fn = expr::Call{.callee = callee, .paren_l = m_previous};
 		if (m_current.type != Token::Type::eParenRight) {
 			do { fn.arguments.push_back(expression()); } while (match(Token::Type::eComma)); // NOLINT
 		}
 		consume(Token::Type::eParenRight);
 		fn.paren_r = m_previous;
-		ret = std::make_unique<Expr>(std::move(fn));
+		return std::make_unique<Expr>(std::move(fn));
 	}
-	return ret;
+	return primary();
 }
 
 auto Parser::primary() -> UExpr {
@@ -86,7 +88,7 @@ auto Parser::primary() -> UExpr {
 		return std::make_unique<Expr>(expr::Group{.expr = std::move(ret)});
 	}
 
-	throw Error{.token = m_current};
+	throw ParseError{m_current};
 }
 
 template <typename... T>
@@ -100,7 +102,7 @@ auto Parser::match(T... types) -> bool {
 }
 
 auto Parser::consume(Token::Type type) noexcept(false) -> void {
-	if (!match(type)) { throw Error{.token = m_current, .expected = type}; }
+	if (!match(type)) { throw ParseError{m_current, type}; }
 }
 
 void Parser::advance() {

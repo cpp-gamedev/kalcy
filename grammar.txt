@@ -13,8 +13,7 @@ sum			product ( ( "+" | "-" ) product )* ;
 product		exponent ( ( "/" | "*" ) exponent )* ;
 exponent	unary ( "^" unary )* ;
 unary		( "-" | "!" ) unary | call;
-call		primary ( "(" arguments? ")" )*
-primary		literal | "(" expression ")"
+call		primary | IDENTIFIER ( "(" arguments? ")" )
+primary		IDENTIFIER | NUMBER | "(" expression ")"
 
-literal		IDENTIFIER | NUMBER
 operator	"+" | "-" | "*" | "/" | "^";

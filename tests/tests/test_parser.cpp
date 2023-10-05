@@ -1,3 +1,4 @@
+#include <kalcy/error.hpp>
 #include <kalcy/parser.hpp>
 #include <kalcy/scanner.hpp>
 #include <test/test.hpp>
@@ -58,9 +59,8 @@ ADD_TEST(ParseCall) {
 	ASSERT(result != nullptr);
 	ASSERT(std::holds_alternative<expr::Call>(*result));
 	auto const& sqrt_call = std::get<expr::Call>(*result);
-	ASSERT(sqrt_call.callee != nullptr);
-	ASSERT(std::holds_alternative<expr::Literal>(*sqrt_call.callee));
-	EXPECT(std::get<expr::Literal>(*sqrt_call.callee).token.lexeme == "sqrt");
+	EXPECT(sqrt_call.callee.type == Token::Type::eIdentifier);
+	EXPECT(sqrt_call.callee.lexeme == "sqrt");
 	ASSERT(sqrt_call.arguments.size() == 1);
 	ASSERT(sqrt_call.arguments.front() != nullptr);
 	ASSERT(std::holds_alternative<expr::Literal>(*sqrt_call.arguments.front()));
@@ -70,9 +70,8 @@ ADD_TEST(ParseCall) {
 	ASSERT(result != nullptr);
 	ASSERT(std::holds_alternative<expr::Call>(*result));
 	auto const& pow_call = std::get<expr::Call>(*result);
-	ASSERT(pow_call.callee != nullptr);
-	ASSERT(std::holds_alternative<expr::Literal>(*pow_call.callee));
-	EXPECT(std::get<expr::Literal>(*pow_call.callee).token.lexeme == "pow");
+	EXPECT(pow_call.callee.type == Token::Type::eIdentifier);
+	EXPECT(pow_call.callee.lexeme == "pow");
 	ASSERT(pow_call.arguments.size() == 2);
 	ASSERT(pow_call.arguments[0] != nullptr);
 	ASSERT(std::holds_alternative<expr::Literal>(*pow_call.arguments[0]));
@@ -86,7 +85,7 @@ ADD_TEST(ParseErrorOnExtraneous) {
 	bool did_throw{};
 	try {
 		parse("123 45");
-	} catch (Parser::Error const& e) {
+	} catch (ParseError const& e) {
 		EXPECT(e.expected == Token::Type::eNone);
 		EXPECT(e.token.location == std::string_view{"123 "}.size());
 		did_throw = true;

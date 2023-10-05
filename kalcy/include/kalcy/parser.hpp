@@ -9,20 +9,6 @@ namespace kalcy {
 class Parser {
   public:
 	///
-	/// \brief Parse error.
-	///
-	struct Error {
-		///
-		/// \brief Token where error occurred.
-		///
-		Token token{};
-		///
-		/// \brief Expected token type.
-		///
-		Token::Type expected{};
-	};
-
-	///
 	/// \brief Construct a parser for passed text.
 	/// \param text text to parse.
 	///

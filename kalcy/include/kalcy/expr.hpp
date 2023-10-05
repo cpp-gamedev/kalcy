@@ -1,22 +1,23 @@
 #pragma once
 #include <kalcy/token.hpp>
 #include <memory>
+#include <string>
 #include <variant>
 #include <vector>
 
 namespace kalcy {
 namespace expr {
+struct Literal;
 struct Unary;
 struct Binary;
-struct Literal;
-struct Group;
 struct Call;
+struct Group;
 } // namespace expr
 
 ///
 /// \brief Expression variant.
 ///
-using Expr = std::variant<expr::Unary, expr::Binary, expr::Literal, expr::Group, expr::Call>;
+using Expr = std::variant<expr::Literal, expr::Unary, expr::Binary, expr::Call, expr::Group>;
 using UExpr = std::unique_ptr<Expr>;
 
 namespace expr {
@@ -55,10 +56,12 @@ struct Group {
 /// \brief Function call expression.
 ///
 struct Call {
-	UExpr callee{};
+	Token callee{};
 	Token paren_l{};
 	Token paren_r{};
 	std::vector<UExpr> arguments{};
 };
 } // namespace expr
+
+[[nodiscard]] auto to_string(Expr const& expr) -> std::string;
 } // namespace kalcy

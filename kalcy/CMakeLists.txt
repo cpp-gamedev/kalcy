@@ -14,8 +14,11 @@ target_compile_features(${PROJECT_NAME} PUBLIC
 )
 
 target_sources(${PROJECT_NAME} PUBLIC FILE_SET HEADERS BASE_DIRS include FILES
+  include/kalcy/error.hpp
   include/kalcy/enum_array.hpp
+  include/kalcy/env.hpp
   include/kalcy/expr.hpp
+  include/kalcy/eval.hpp
   include/kalcy/kalcy.hpp
   include/kalcy/parser.hpp
   include/kalcy/scanner.hpp
@@ -23,6 +26,10 @@ target_sources(${PROJECT_NAME} PUBLIC FILE_SET HEADERS BASE_DIRS include FILES
 )
 
 target_sources(${PROJECT_NAME} PRIVATE
+  src/env.cpp
+  src/error.cpp
+  src/eval.cpp
+  src/expr.cpp
   src/kalcy.cpp
   src/parser.cpp
   src/scanner.cpp
