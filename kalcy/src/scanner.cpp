@@ -1,4 +1,4 @@
-#include <impl/scanner.hpp>
+#include <kalcy/scanner.hpp>
 #include <cassert>
 #include <cctype>
 #include <charconv>
@@ -13,17 +13,22 @@ namespace {
 	}
 	return std::string_view::npos;
 }
+
+[[nodiscard]] auto is_alpha(char const ch) -> bool { return ch == '_' || (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z'); }
+
+[[nodiscard]] auto is_alphanumeric(char const ch) -> bool { return std::isdigit(static_cast<unsigned char>(ch)) != 0 || is_alpha(ch); }
 } // namespace
 
-auto Scanner::next(Token& out) -> bool {
+auto Scanner::next() -> Token {
 	while (!at_end() && is_space(current())) { advance(); }
-	if (at_end()) { return false; }
+	if (at_end()) { return {}; }
 
-	if (match_number(out)) { return true; }
-	if (match_single(out)) { return true; }
+	auto out = Token{};
+	if (match_number(out)) { return out; }
+	if (match_single(out)) { return out; }
+	if (match_identifier(out)) { return out; }
 
-	out = make_identifier();
-	return true;
+	return {};
 }
 
 auto Scanner::match_single(Token& out) -> bool {
@@ -43,22 +48,28 @@ auto Scanner::match_number(Token& out) -> bool {
 	char const* end = index < m_text.size() ? m_text.data() + index : m_text.data() + m_text.size();
 	auto value = double{};
 	auto const [ptr, ec] = std::from_chars(m_text.data(), end, value);
-	if (ec == std::errc{} && ptr == end) {
-		out = make_token(Token::Type::eNumber, {m_text.data(), end});
+	if (ec == std::errc{}) {
+		out = make_token(Token::Type::eNumber, {m_text.data(), ptr});
 		out.value = value;
 		return true;
 	}
 	return false;
 }
 
-auto Scanner::make_identifier() -> Token {
+auto Scanner::match_identifier(Token& out) -> bool {
+	assert(!at_end());
+	if (!is_alpha(m_text.front())) { return false; }
 	auto end = std::size_t{};
-	for (; end < m_text.size() && !is_space(m_text.at(end)); ++end) {}
-	return make_token(Token::Type::eIdentifier, m_text.substr(0, end));
+	while (end < m_text.size()) {
+		if (!is_alphanumeric(m_text.at(end))) { break; }
+		++end;
+	}
+	out = make_token(Token::Type::eIdentifier, m_text.substr(0, end));
+	return true;
 }
 
 auto Scanner::make_token(Token::Type const type, std::string_view const text) -> Token {
-	auto ret = Token{.type = type, .text = text, .location = m_location};
+	auto ret = Token{.type = type, .lexeme = text, .location = m_location};
 	advance(static_cast<int>(text.size()));
 	return ret;
 }

@@ -9,23 +9,21 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   include
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE
-  src
-)
-
 target_compile_features(${PROJECT_NAME} PUBLIC
   cxx_std_20
 )
 
 target_sources(${PROJECT_NAME} PUBLIC FILE_SET HEADERS BASE_DIRS include FILES
+  include/kalcy/enum_array.hpp
+  include/kalcy/expr.hpp
   include/kalcy/kalcy.hpp
+  include/kalcy/parser.hpp
+  include/kalcy/scanner.hpp
+  include/kalcy/token.hpp
 )
 
 target_sources(${PROJECT_NAME} PRIVATE
-  src/impl/enum_array.hpp
-  src/impl/scanner.cpp
-  src/impl/scanner.hpp
-  src/impl/token.hpp
-
   src/kalcy.cpp
+  src/parser.cpp
+  src/scanner.cpp
 )

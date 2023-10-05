@@ -40,7 +40,13 @@ void Test::do_assert(bool pred, std::string_view expr, std::source_location cons
 
 auto run_test(Test& test) -> bool {
 	g_failed = {};
-	test.run();
+	try {
+		test.run();
+	} catch (Assert) {
+	} catch (std::exception const& e) {
+		std::cerr << std::format("exception caught: {}\n", e.what());
+		g_failed = true;
+	}
 	if (g_failed) {
 		std::cerr << std::format("[FAILED] {}\n", test.get_name());
 		return false;

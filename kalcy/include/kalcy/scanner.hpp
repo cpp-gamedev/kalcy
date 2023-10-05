@@ -1,5 +1,5 @@
 #pragma once
-#include <impl/token.hpp>
+#include <kalcy/token.hpp>
 
 namespace kalcy {
 ///
@@ -11,6 +11,8 @@ class Scanner {
 	/// \brief Construct scanner for text.
 	/// \param text text to scan.
 	///
+	/// Caller must ensure source of text outlives all tokens scanned from it.
+	///
 	explicit Scanner(std::string_view text) : m_text(text) {}
 
 	///
@@ -21,10 +23,9 @@ class Scanner {
 
 	///
 	/// \brief Obtain the next token.
-	/// \param out Token that's set on success.
-	/// \returns true on success.
+	/// \returns Token on success.
 	///
-	auto next(Token& out) -> bool;
+	auto next() -> Token;
 
   private:
 	[[nodiscard]] auto current() const -> char { return at_end() ? '\0' : m_text.front(); }
@@ -32,8 +33,7 @@ class Scanner {
 
 	auto match_single(Token& out) -> bool;
 	auto match_number(Token& out) -> bool;
-
-	auto make_identifier() -> Token;
+	auto match_identifier(Token& out) -> bool;
 
 	void advance(int count = 1);
 

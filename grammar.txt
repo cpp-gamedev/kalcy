@@ -1,0 +1,20 @@
+associativity table:
+=========================================
+name		operators		associativity
+sum			- +				left
+product		* /				left
+exponent	^				left
+unary		! -				right
+
+precedence table:
+========================================================
+expression	sum
+sum			product ( ( "+" | "-" ) product )* ;
+product		exponent ( ( "/" | "*" ) exponent )* ;
+exponent	unary ( "^" unary )* ;
+unary		( "-" | "!" ) unary | call;
+call		primary ( "(" arguments? ")" )*
+primary		literal | "(" expression ")"
+
+literal		IDENTIFIER | NUMBER
+operator	"+" | "-" | "*" | "/" | "^";

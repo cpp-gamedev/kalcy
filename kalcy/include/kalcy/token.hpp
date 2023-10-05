@@ -1,5 +1,5 @@
 #pragma once
-#include <impl/enum_array.hpp>
+#include <kalcy/enum_array.hpp>
 #include <string_view>
 
 namespace kalcy {
@@ -34,8 +34,10 @@ struct Token {
 	};
 
 	Type type{};
-	std::string_view text{};
+	std::string_view lexeme{};
 	double value{};
 	std::size_t location{};
+
+	explicit constexpr operator bool() const { return type > Type::eNone; }
 };
 } // namespace kalcy

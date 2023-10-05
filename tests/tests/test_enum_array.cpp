@@ -1,4 +1,4 @@
-#include <impl/enum_array.hpp>
+#include <kalcy/enum_array.hpp>
 
 namespace {
 using namespace kalcy;

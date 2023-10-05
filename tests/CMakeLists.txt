@@ -17,7 +17,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   .
-  ../kalcy/src
 )
 
 add_subdirectory(tests)
