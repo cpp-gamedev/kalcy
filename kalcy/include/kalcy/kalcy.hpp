@@ -1,4 +1,5 @@
 #pragma once
+#include <kalcy/build_version.hpp>
 #include <kalcy/env.hpp>
 
 namespace kalcy {

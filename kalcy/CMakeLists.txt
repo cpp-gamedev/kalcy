@@ -7,11 +7,14 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   include
+  "${CMAKE_CURRENT_BINARY_DIR}/include"
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC
   cxx_std_20
 )
+
+configure_file(src/build_version.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/include/kalcy/build_version.hpp" @ONLY)
 
 target_sources(${PROJECT_NAME} PUBLIC FILE_SET HEADERS BASE_DIRS include FILES
   include/kalcy/error.hpp
