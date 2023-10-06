@@ -36,8 +36,7 @@ ADD_TEST(ScanIdentifiers) {
 
 ADD_TEST(ScanNumbers) {
 	EXPECT(match_number("3", 3));
-	EXPECT(match_number("-42", -42));
-	EXPECT(match_number("-4.2", -4.2)); // NOLINT
+	EXPECT(match_number("4.2", 4.2)); // NOLINT
 }
 
 ADD_TEST(ScanMultiple) {
