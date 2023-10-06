@@ -19,9 +19,18 @@ class Env {
 	///
 	/// \brief Funcs can throw an instance of this.
 	///
-	struct Mismatch {
-		std::size_t argument_count{};
-	};
+	struct Mismatch {};
+
+	///
+	/// \brief Get a default instance (singleton).
+	/// \returns const reference to a static default instance.
+	///
+	static auto get_default() -> Env const&;
+
+	///
+	/// \brief Populate environment with builtins.
+	///
+	explicit Env();
 
 	///
 	/// \brief Define a function.

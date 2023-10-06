@@ -20,4 +20,6 @@ struct Eval {
 	///
 	[[nodiscard]] auto operator()(Expr const& expr) const noexcept(false) -> double;
 };
+
+inline auto evaluate(Expr const& expr, Env const& env = Env::get_default()) { return Eval{env}(expr); }
 } // namespace kalcy

@@ -1,0 +1,9 @@
+#pragma once
+#include <string_view>
+
+namespace kalcy {
+///
+/// \brief kalcy build version.
+///
+inline constexpr std::string_view version_v{"@PROJECT_VERSION@"};
+} // namespace kalcy
