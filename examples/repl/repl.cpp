@@ -21,6 +21,7 @@ struct Repl {
 		}
 		// print epilogue
 		std::cout << std::format("\n^^ kalcy v{}\n", kalcy::version_v);
+		return EXIT_SUCCESS;
 	}
 
 	auto run(std::string_view const text) -> bool {
@@ -55,5 +56,5 @@ struct Repl {
 auto main(int argc, char** argv) -> int {
 
 	Repl repl{};
-	repl.start();
+	return repl.start();
 }
