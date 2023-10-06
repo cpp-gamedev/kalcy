@@ -9,18 +9,19 @@ namespace {
 struct Repl {
 	bool verbose{}; // toggled on with '-v' and off with '-q'
 	bool is_running{true};
+	kalcy::Parser parser{};
 
 	auto print_help() -> void {
 		std::cout << "Usage: [OPTION] | [EXPRESSION]\n";
 		std::cout << "\nDescription:\n\n";
-		std::cout << std::format("  {:<15} {}\n", "-h, --help", "Display this help message, providing information about available options.");
+		std::cout << std::format("  {:<15} {}\n", "-h, -help", "Display this help message, providing information about available options.");
 		std::cout << std::format("  {:<15} {}\n", "-v", "Toggle verbose mode to control the level of detail in the output.");
-		std::cout << std::format("  {:<15} {}\n", "exit", "Terminate the REPL input loop.");
+		std::cout << std::format("  {:<15} {}\n\n", "exit", "Terminate the REPL input loop.");
 	}
 
 	auto start() -> bool {
 		while (is_running) {
-			std::string text{};
+			auto text = std::string{};
 			std::cout << std::format("{} > ", verbose ? "[verbose]" : "");
 			std::getline(std::cin, text);
 			// run kalcy on input expression
@@ -32,28 +33,34 @@ struct Repl {
 		}
 		// print epilogue
 		std::cout << std::format("\n^^ kalcy v{}\n", kalcy::version_v);
-		return EXIT_SUCCESS;
+		return true;
 	}
 
 	auto run(std::string_view const text) -> bool {
 		try {
 			if (text == "exit") {
 				is_running = false;
-			} else if (text == "-v") {
-				verbose = !verbose;
-			} else if (text == "-h" || text == "-help") {
+				return true;
+			}
+
+			if (text == "-h" || text == "-help") {
 				print_help();
+				return true;
+			}
+
+			if (text == "-v") {
+				verbose = !verbose;
 			} else {
 				// parse text into an expression
-				auto expr = kalcy::Parser{}.parse(text);
+				auto expr = parser.parse(text);
 				assert(expr != nullptr);
 				// evaluate parsed expression
 				// a custom Env can be used and passed, if desired
 				std::cout << kalcy::evaluate(*expr) << "\n";
 				// print AST if verbose
 				if (verbose) { std::cout << std::format("expression\t: {}\nAST\t\t: {}\n", text, kalcy::to_string(*expr)); }
+				return true;
 			}
-			return true;
 		} catch (kalcy::Error const& err) {
 			// print error
 			std::cerr << err.what() << "\n";
@@ -68,5 +75,7 @@ struct Repl {
 auto main() -> int {
 
 	Repl repl{};
-	repl.start();
+	try {
+		repl.start();
+	} catch (std::exception const& e) { std::cerr << e.what() << "\n"; }
 }
