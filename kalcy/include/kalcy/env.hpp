@@ -22,6 +22,17 @@ class Env {
 	struct Mismatch {};
 
 	///
+	/// \brief Get a default instance (singleton).
+	/// \returns const reference to a static default instance.
+	///
+	static auto get_default() -> Env const&;
+
+	///
+	/// \brief Populate environment with builtins.
+	///
+	explicit Env();
+
+	///
 	/// \brief Define a function.
 	///
 	void define(std::string_view name, Func func);

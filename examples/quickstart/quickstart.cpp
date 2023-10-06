@@ -1,4 +1,5 @@
 #include <kalcy/kalcy.hpp>
+#include <cassert>
 #include <format>
 #include <iomanip>
 #include <iostream>
@@ -6,11 +7,11 @@
 
 namespace {
 auto run(std::string_view const text, bool verbose) -> bool {
-	auto kalcy = kalcy::Kalcy{};
-	auto ast = std::string{};
 	try {
-		std::cout << kalcy.evaluate(text, &ast) << "\n";
-		if (verbose) { std::cout << "expression\t: " << text << "\nAST\t\t: " << ast << "\n"; }
+		auto expr = kalcy::Parser{text}.parse();
+		assert(expr != nullptr);
+		std::cout << kalcy::evaluate(*expr) << "\n";
+		if (verbose) { std::cout << std::format("expression\t: {}\nAST\t\t: {}\n", text, kalcy::to_string(*expr)); }
 		return true;
 	} catch (kalcy::Error const& err) {
 		std::cerr << err.what() << "\n";

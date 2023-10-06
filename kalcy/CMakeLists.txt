@@ -33,7 +33,6 @@ target_sources(${PROJECT_NAME} PRIVATE
   src/error.cpp
   src/eval.cpp
   src/expr.cpp
-  src/kalcy.cpp
   src/parser.cpp
   src/scanner.cpp
 )

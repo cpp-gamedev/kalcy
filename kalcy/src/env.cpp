@@ -1,8 +1,23 @@
 #include <kalcy/env.hpp>
 #include <kalcy/error.hpp>
 #include <cassert>
+#include <cmath>
+#include <numbers>
 
 namespace kalcy {
+auto Env::get_default() -> Env const& {
+	static auto const ret{Env{}};
+	return ret;
+}
+
+Env::Env() {
+	define("pi", std::numbers::pi_v<double>);
+	define("sqrt", [](std::span<double const> args) {
+		if (args.size() != 1) { throw Mismatch{}; }
+		return std::sqrt(args.front());
+	});
+}
+
 void Env::define(std::string_view name, Func func) {
 	if (name.empty() || !func) { return; }
 	m_table.insert_or_assign(name, std::move(func));
