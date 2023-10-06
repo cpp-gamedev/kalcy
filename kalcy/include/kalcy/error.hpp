@@ -47,7 +47,7 @@ struct ArgsMismatch : Error {
 	explicit ArgsMismatch(Token token, std::size_t argument_count);
 };
 
-struct InvalidOperaor : Error {
-	explicit InvalidOperaor(Token token);
+struct InvalidOperator : Error {
+	explicit InvalidOperator(Token token);
 };
 } // namespace kalcy

@@ -46,7 +46,7 @@ class Env {
 	/// \returns Return value of invoked function.
 	/// \param name Name of function.
 	/// \param args Arguments to function.
-	/// \throws UndefinedSymbol if name is not defined as a function.
+	/// \throws UndefinedSymbol, ArgsMismatch.
 	///
 	[[nodiscard]] auto invoke(Token name, std::span<double const> args) const noexcept(false) -> double;
 

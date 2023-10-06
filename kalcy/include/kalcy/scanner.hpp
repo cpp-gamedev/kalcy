@@ -13,7 +13,7 @@ class Scanner {
 	///
 	/// Caller must ensure source of text outlives all tokens scanned from it.
 	///
-	explicit Scanner(std::string_view text) : m_text(text) {}
+	explicit Scanner(std::string_view text = {}) : m_text(text) {}
 
 	///
 	/// \brief Check if no more tokens remain.

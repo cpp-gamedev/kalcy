@@ -9,21 +9,18 @@ namespace kalcy {
 class Parser {
   public:
 	///
-	/// \brief Construct a parser for passed text.
+	/// \brief Parse tokens into an expression.
 	/// \param text text to parse.
+	/// \returns Parsed expression (or null if no tokens).
+	/// \throws ParseError.
 	///
 	/// Caller must ensure the source of text outlives all expressions parsed from it.
 	///
-	explicit Parser(std::string_view text);
-
-	///
-	/// \brief Parse tokens into an expression.
-	/// \returns Parsed expression (or null if no tokens).
-	/// \throws Error on parse error.
-	///
-	auto parse() noexcept(false) -> UExpr;
+	auto parse(std::string_view text) noexcept(false) -> UExpr;
 
   private:
+	void reset(std::string_view text);
+
 	[[nodiscard]] auto expression() -> UExpr;
 	[[nodiscard]] auto sum() -> UExpr;
 	[[nodiscard]] auto product() -> UExpr;
@@ -37,7 +34,7 @@ class Parser {
 	auto consume(Token::Type type) noexcept(false) -> void;
 	void advance();
 
-	Scanner m_scanner;
+	Scanner m_scanner{};
 
 	Token m_previous{};
 	Token m_current{};

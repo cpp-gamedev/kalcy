@@ -4,9 +4,8 @@
 #include <cassert>
 
 namespace kalcy {
-Parser::Parser(std::string_view text) : m_scanner(text), m_current(m_scanner.next()), m_next(m_scanner.next()) {}
-
-auto Parser::parse() noexcept(false) -> UExpr {
+auto Parser::parse(std::string_view text) noexcept(false) -> UExpr {
+	reset(text);
 	if (!m_current) { return {}; }
 	auto ret = expression();
 	if (m_current || m_next) {
@@ -16,6 +15,13 @@ auto Parser::parse() noexcept(false) -> UExpr {
 	return ret;
 }
 
+void Parser::reset(std::string_view const text) {
+	m_scanner = Scanner{text};
+	m_current = m_scanner.next();
+	m_next = m_scanner.next();
+	m_previous = {};
+}
+
 auto Parser::expression() -> UExpr { return sum(); }
 
 auto Parser::sum() -> UExpr {
@@ -23,7 +29,7 @@ auto Parser::sum() -> UExpr {
 
 	while (match(Token::Type::ePlus, Token::Type::eMinus)) {
 		auto const token = m_previous;
-		auto rhs = expression();
+		auto rhs = product();
 		ret = std::make_unique<Expr>(expr::Binary{.left = std::move(ret), .op = token, .right = std::move(rhs)});
 	}
 

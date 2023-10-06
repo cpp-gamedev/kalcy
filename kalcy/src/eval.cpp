@@ -1,6 +1,5 @@
 #include <kalcy/error.hpp>
 #include <kalcy/eval.hpp>
-#include <kalcy/visitor.hpp>
 #include <cassert>
 #include <cmath>
 #include <format>
@@ -20,7 +19,7 @@ struct Evaluator {
 	}
 
 	auto operator()(expr::Unary const& unary) const -> double {
-		if (unary.op.type != Token::Type::eMinus) { throw InvalidOperaor{unary.op}; }
+		if (unary.op.type != Token::Type::eMinus) { throw InvalidOperator{unary.op}; }
 		return -Evaluator{env}.evaluate(*unary.right);
 	}
 
@@ -37,7 +36,7 @@ struct Evaluator {
 		default: break;
 		}
 
-		throw InvalidOperaor{binary.op};
+		throw InvalidOperator{binary.op};
 	}
 
 	auto operator()(expr::Call const& call) const -> double {

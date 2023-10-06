@@ -9,7 +9,7 @@ namespace {
 auto run(std::string_view const text, bool verbose) -> bool {
 	try {
 		// parse text into an expression
-		auto expr = kalcy::Parser{text}.parse();
+		auto expr = kalcy::Parser{}.parse(text);
 		assert(expr != nullptr);
 		// evaluate parsed expression
 		// a custom Env can be used and passed, if desired
@@ -33,7 +33,7 @@ auto main(int argc, char** argv) -> int {
 
 	bool verbose{};
 	// check if verbose
-	if (args.front() == std::string_view{"-v"}) {
+	if (!args.empty() && args.front() == std::string_view{"-v"}) {
 		verbose = true;
 		// advance args by 1
 		args = args.subspan(1);

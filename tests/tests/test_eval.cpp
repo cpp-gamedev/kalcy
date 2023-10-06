@@ -7,7 +7,7 @@
 namespace {
 using namespace kalcy;
 
-auto make_expr(std::string_view text) -> UExpr { return Parser{text}.parse(); }
+auto make_expr(std::string_view text) -> UExpr { return Parser{}.parse(text); }
 
 ADD_TEST(Evaluate) {
 	auto const env = Env{};

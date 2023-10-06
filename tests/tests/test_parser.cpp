@@ -6,7 +6,7 @@
 
 namespace {
 using namespace kalcy;
-auto parse(std::string_view const text) -> UExpr { return Parser{text}.parse(); }
+auto parse(std::string_view const text) -> UExpr { return Parser{}.parse(text); }
 
 ADD_TEST(ParseEmptyString) { EXPECT(parse("") == nullptr); }
 
