@@ -10,7 +10,7 @@ jobs:
       - name: configure gcc
         run: cmake -S . --preset=default -B build -DCMAKE_CXX_COMPILER=g++-13
       - name: configure clang
-        run: cmake -S . --preset=ninja-clang -B clang -DCMAKE_CXX_COMPILER=clang++-15
+        run: cmake -S . --preset=ninja-clang -B clang -DKALCY_BUILD_TESTS=OFF -DKALCY_BUILD_EXAMPLES=OFF -DCMAKE_CXX_COMPILER=clang++-15
       - name: build gcc
         run: cmake --build build --config=Release
       - name: build clang
