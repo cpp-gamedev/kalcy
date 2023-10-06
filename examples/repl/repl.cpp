@@ -7,17 +7,28 @@
 
 namespace {
 struct Repl {
-	const std::string_view EXIT_TOKEN{"exit"};
 	bool verbose{}; // toggled on with '-v' and off with '-q'
 	bool is_running{true};
+
+	auto print_help() -> void {
+		std::cout << "Usage: [OPTION] | [EXPRESSION]\n";
+		std::cout << "\nDescription:\n\n";
+		std::cout << std::format("  {:<15} {}\n", "-h, --help", "Display this help message, providing information about available options.");
+		std::cout << std::format("  {:<15} {}\n", "-v", "Toggle verbose mode to control the level of detail in the output.");
+		std::cout << std::format("  {:<15} {}\n", "exit", "Terminate the REPL input loop.");
+	}
 
 	auto start() -> bool {
 		while (is_running) {
 			std::string text{};
-			std::cout << std::format("[{}] > ", verbose ? "verbose" : "quiet");
+			std::cout << std::format("{} > ", verbose ? "[verbose]" : "");
 			std::getline(std::cin, text);
 			// run kalcy on input expression
-			if (!run(text)) { return EXIT_FAILURE; }
+			if (!text.empty()) {
+				if (!run(text)) { return EXIT_FAILURE; }
+			} else {
+				print_help();
+			}
 		}
 		// print epilogue
 		std::cout << std::format("\n^^ kalcy v{}\n", kalcy::version_v);
@@ -26,12 +37,13 @@ struct Repl {
 
 	auto run(std::string_view const text) -> bool {
 		try {
-			// return false when the user enters the exit token
-			if (text == EXIT_TOKEN) {
+			if (text == "exit") {
 				is_running = false;
 			} else if (text == "-v") {
 				verbose = !verbose;
-			}  else {
+			} else if (text == "-h" || text == "-help") {
+				print_help();
+			} else {
 				// parse text into an expression
 				auto expr = kalcy::Parser{}.parse(text);
 				assert(expr != nullptr);
@@ -53,8 +65,8 @@ struct Repl {
 };
 } // namespace
 
-auto main(int argc, char** argv) -> int {
+auto main() -> int {
 
 	Repl repl{};
-	return repl.start();
+	repl.start();
 }
