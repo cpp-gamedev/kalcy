@@ -35,4 +35,6 @@ auto main(int argc, char** argv) -> int {
 	}
 
 	if (!run(args.front(), verbose)) { return EXIT_FAILURE; }
+
+	std::cout << std::format("\n^^ kalcy v{}\n", kalcy::version_v);
 }
