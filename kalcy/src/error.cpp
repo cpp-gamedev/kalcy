@@ -1,7 +1,16 @@
 #include <kalcy/error.hpp>
 #include <format>
+#include <iomanip>
+#include <sstream>
 
 namespace kalcy {
+auto Error::build_highlight(char const higlight) const -> std::string {
+	auto ret = std::ostringstream{};
+	if (token.location > 0) { ret << std::setw(static_cast<int>(token.location)) << ' '; }
+	ret << std::setfill(higlight) << std::setw(static_cast<int>(token.lexeme.size())) << higlight;
+	return ret.str();
+}
+
 ParseError::ParseError(Token const token) : Error(token, "parse error") {}
 
 ParseError::ParseError(Token const token, Token::Type const expected)

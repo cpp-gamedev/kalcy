@@ -10,6 +10,8 @@ struct Error : std::runtime_error {
 	Token token{};
 
 	explicit Error(Token const token, std::string const& message) : std::runtime_error(message), token(token) {}
+
+	[[nodiscard]] auto build_highlight(char higlight = '^') const -> std::string;
 };
 
 ///

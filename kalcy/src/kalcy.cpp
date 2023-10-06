@@ -13,10 +13,11 @@ Kalcy::Kalcy() {
 	});
 }
 
-auto Kalcy::evaluate(std::string_view const expression) const noexcept(false) -> double {
+auto Kalcy::evaluate(std::string_view const expression, std::string* out_ast) const noexcept(false) -> double {
 	if (expression.empty()) { return {}; }
 	auto expr = Parser{expression}.parse();
 	if (!expr) { return {}; }
+	if (out_ast != nullptr) { *out_ast = to_string(*expr); }
 	return Eval{environment}(*expr);
 }
 } // namespace kalcy

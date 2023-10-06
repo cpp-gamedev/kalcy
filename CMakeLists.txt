@@ -33,7 +33,7 @@ endif()
 add_subdirectory(kalcy)
 
 if(KALCY_BUILD_EXAMPLES)
-  # add_subdirectory(examples)
+  add_subdirectory(examples)
 endif()
 
 if(KALCY_BUILD_TESTS)
