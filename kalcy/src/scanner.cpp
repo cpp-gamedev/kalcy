@@ -24,8 +24,8 @@ auto Scanner::next() -> Token {
 	if (at_end()) { return {}; }
 
 	auto out = Token{};
-	if (match_number(out)) { return out; }
 	if (match_single(out)) { return out; }
+	if (match_number(out)) { return out; }
 	if (match_identifier(out)) { return out; }
 
 	return {};

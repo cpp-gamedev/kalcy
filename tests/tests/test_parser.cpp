@@ -34,7 +34,7 @@ ADD_TEST(ParseUnary) {
 }
 
 ADD_TEST(ParseBinary) {
-	auto result = parse("3+2");
+	auto result = parse("3 -2");
 	ASSERT(result != nullptr);
 	ASSERT(std::holds_alternative<expr::Binary>(*result));
 	auto const& binary = std::get<expr::Binary>(*result);
@@ -45,7 +45,7 @@ ADD_TEST(ParseBinary) {
 	EXPECT(literal.token.type == Token::Type::eNumber);
 	EXPECT(literal.token.value == 3.0); // NOLINT
 
-	EXPECT(binary.op.type == Token::Type::ePlus);
+	EXPECT(binary.op.type == Token::Type::eMinus);
 
 	ASSERT(binary.right != nullptr);
 	ASSERT(std::holds_alternative<expr::Literal>(*binary.right));
@@ -77,8 +77,12 @@ ADD_TEST(ParseCall) {
 	ASSERT(std::holds_alternative<expr::Literal>(*pow_call.arguments[0]));
 	EXPECT(std::get<expr::Literal>(*pow_call.arguments[0]).token.value == 42); // NOLINT
 	ASSERT(pow_call.arguments[1] != nullptr);
-	ASSERT(std::holds_alternative<expr::Literal>(*pow_call.arguments[1]));
-	EXPECT(std::get<expr::Literal>(*pow_call.arguments[1]).token.value == -5); // NOLINT
+	ASSERT(std::holds_alternative<expr::Unary>(*pow_call.arguments[1]));
+	auto const& minus_5 = std::get<expr::Unary>(*pow_call.arguments[1]);
+	EXPECT(minus_5.op.type == Token::Type::eMinus);
+	ASSERT(minus_5.right != nullptr);
+	ASSERT(std::holds_alternative<expr::Literal>(*minus_5.right));
+	EXPECT(std::get<expr::Literal>(*minus_5.right).token.value == 5); // NOLINT
 }
 
 ADD_TEST(ParseErrorOnExtraneous) {
