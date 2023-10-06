@@ -3,6 +3,7 @@
 #include <kalcy/kalcy.hpp>
 #include <kalcy/parser.hpp>
 #include <cmath>
+#include <numbers>
 
 namespace kalcy {
 Kalcy::Kalcy() {
