@@ -11,7 +11,7 @@ struct Repl {
 	bool is_running{true};
 	kalcy::Parser parser{};
 
-	auto print_help() -> void {
+	auto  print_help() const -> void {
 		std::cout << "Usage: [OPTION] | [EXPRESSION]\n";
 		std::cout << "\nDescription:\n\n";
 		std::cout << std::format("  {:<15} {}\n", "-h, -help", "Display this help message, providing information about available options.");
@@ -19,21 +19,20 @@ struct Repl {
 		std::cout << std::format("  {:<15} {}\n\n", "exit", "Terminate the REPL input loop.");
 	}
 
-	auto start() -> bool {
+	auto start() -> void {
 		while (is_running) {
 			auto text = std::string{};
 			std::cout << std::format("{} > ", verbose ? "[verbose]" : "");
 			std::getline(std::cin, text);
 			// run kalcy on input expression
 			if (!text.empty()) {
-				if (!run(text)) { return EXIT_FAILURE; }
+				run(text);
 			} else {
 				print_help();
 			}
 		}
 		// print epilogue
 		std::cout << std::format("\n^^ kalcy v{}\n", kalcy::version_v);
-		return true;
 	}
 
 	auto run(std::string_view const text) -> bool {
@@ -50,17 +49,18 @@ struct Repl {
 
 			if (text == "-v") {
 				verbose = !verbose;
-			} else {
-				// parse text into an expression
-				auto expr = parser.parse(text);
-				assert(expr != nullptr);
-				// evaluate parsed expression
-				// a custom Env can be used and passed, if desired
-				std::cout << kalcy::evaluate(*expr) << "\n";
-				// print AST if verbose
-				if (verbose) { std::cout << std::format("expression\t: {}\nAST\t\t: {}\n", text, kalcy::to_string(*expr)); }
 				return true;
 			}
+			// parse text into an expression
+			auto expr = parser.parse(text);
+			assert(expr != nullptr);
+			// evaluate parsed expression
+			// a custom Env can be used and passed, if desired
+			std::cout << kalcy::evaluate(*expr) << "\n";
+			// print AST if verbose
+			if (verbose) { std::cout << std::format("expression\t: {}\nAST\t\t: {}\n", text, kalcy::to_string(*expr)); }
+			return true;
+
 		} catch (kalcy::Error const& err) {
 			// print error
 			std::cerr << err.what() << "\n";
