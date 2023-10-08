@@ -22,6 +22,13 @@ struct InternalError : Error {
 };
 
 ///
+/// \brief Unrecognized token.
+///
+struct UnrecognizedToken : Error {
+	explicit UnrecognizedToken(Token token);
+};
+
+///
 /// \brief Parse error.
 ///
 struct ParseError : Error {

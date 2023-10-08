@@ -97,6 +97,28 @@ ADD_TEST(ParseErrorOnExtraneous) {
 	EXPECT(did_throw);
 }
 
+ADD_TEST(ParseErrorOnInvalidToken) {
+	bool did_throw{};
+	try {
+		parse("`");
+	} catch (UnrecognizedToken const& e) {
+		EXPECT(e.token.location == 0);
+		EXPECT(e.token.lexeme == "`");
+		did_throw = true;
+	}
+	EXPECT(did_throw);
+
+	did_throw = false;
+	try {
+		parse("pi@");
+	} catch (UnrecognizedToken const& e) {
+		EXPECT(e.token.location == 2);
+		EXPECT(e.token.lexeme == "@");
+		did_throw = true;
+	}
+	EXPECT(did_throw);
+}
+
 ADD_TEST(ParsePrecedence) {
 	auto result = parse("1 + 2 * 3");
 	ASSERT(result != nullptr);
