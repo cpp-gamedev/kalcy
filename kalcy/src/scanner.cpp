@@ -1,3 +1,4 @@
+#include <kalcy/error.hpp>
 #include <kalcy/scanner.hpp>
 #include <cassert>
 #include <cctype>
@@ -28,7 +29,7 @@ auto Scanner::next() -> Token {
 	if (match_number(out)) { return out; }
 	if (match_identifier(out)) { return out; }
 
-	return {};
+	throw UnrecognizedToken{make_token(Token::Type::eNone, {&m_text.front(), 1})};
 }
 
 auto Scanner::match_single(Token& out) -> bool {

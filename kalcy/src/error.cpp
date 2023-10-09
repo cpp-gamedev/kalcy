@@ -11,6 +11,8 @@ auto Error::build_highlight(char const higlight) const -> std::string {
 	return ret.str();
 }
 
+UnrecognizedToken::UnrecognizedToken(Token const token) : Error(token, std::format("unrecognized token: '{}'", token.lexeme)) {}
+
 ParseError::ParseError(Token const token) : Error(token, "parse error") {}
 
 ParseError::ParseError(Token const token, Token::Type const expected)
