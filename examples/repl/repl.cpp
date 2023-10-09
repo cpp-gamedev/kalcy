@@ -14,8 +14,8 @@ struct Repl {
 	auto  print_help() const -> void {
 		std::cout << "Usage: [OPTION] | [EXPRESSION]\n";
 		std::cout << "\nDescription:\n\n";
-		std::cout << std::format("  {:<15} {}\n", "-h, -help", "Display this help message, providing information about available options.");
-		std::cout << std::format("  {:<15} {}\n", "-v", "Toggle verbose mode to control the level of detail in the output.");
+		std::cout << std::format("  {:<15} {}\n", "-h, --help", "Display this help message, providing information about available options.");
+		std::cout << std::format("  {:<15} {}\n", "-v, --verbose", "Toggle verbose mode to control the level of detail in the output.");
 		std::cout << std::format("  {:<15} {}\n\n", "exit", "Terminate the REPL input loop.");
 	}
 
@@ -42,12 +42,12 @@ struct Repl {
 				return true;
 			}
 
-			if (text == "-h" || text == "-help") {
+			if (text == "-h" || text == "--help") {
 				print_help();
 				return true;
 			}
 
-			if (text == "-v") {
+			if (text == "-v" || text == "--verbose") {
 				verbose = !verbose;
 				return true;
 			}
